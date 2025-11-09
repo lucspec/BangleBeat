@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python
 """
 Gadgetbridge SQLite3 Database Parser
 Extracts and analyzes data from Gadgetbridge fitness tracker database
@@ -11,7 +11,11 @@ from datetime import datetime
 import os
 
 # Database path - update this to your Gadgetbridge database location
-DB_PATH = "~/Documents/gadgetbridge_20251109112942/database/Gadgetbridge"
+DB_PATH = "/home/luc/Documents/gadgetbridge_20251109112942/database/Gadgetbridge"
+
+DEVICE_TABLES = [ 
+    "GARMIN_HEART_RATE_RESTING_SAMPLE"
+]
 
 def connect_database(db_path):
     """Connect to the Gadgetbridge SQLite database"""
