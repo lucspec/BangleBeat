@@ -5,3 +5,6 @@
 **/Gadgetbridge
 .vscode/settings.json
 .envrc
+
+**.pyc
+**__pycache__**
