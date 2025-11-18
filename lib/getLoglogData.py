@@ -22,7 +22,7 @@ except ImportError as e:
     print("Run: poetry install --with analysis")
     sys.exit(1)
 
-def getLoglogCsv(csv_path: str,
+def getLoglogData(csv_path: str,
                  device_name: str = 'loglog',
                  start_date: Optional[str] = None,
                  end_date: Optional[str] = None) -> pd.DataFrame:

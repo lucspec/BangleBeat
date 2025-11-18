@@ -23,7 +23,7 @@ except ImportError as e:
     print("Run: poetry install --with analysis")
     sys.exit(1)
 
-DB_PATH = "/home/luc/Sync/phone-general/BioData/Gadgetbridge.db"
+DB_PATH = "./data/Gadgetbridge.db"
 
 def get_garmin_hr_data(conn, device_id=1, start_date=None, end_date=None):
     """Get heart rate data from Garmin Instinct 2X Solar"""
