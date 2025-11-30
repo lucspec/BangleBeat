@@ -10,3 +10,6 @@
 
 ./data/**
 .envrc
+
+**.pyc
+**__pycache__**
