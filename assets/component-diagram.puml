@@ -1,0 +1,58 @@
+@startuml
+skinparam monochrome false
+
+package "Data Sources" {
+  component "Polar H10" as polar
+  component "Garmin Instinct 2X" as garmin
+  package "Bangle JS 2" {
+    component "BangleJS 2 Firmware" as bangle
+    component "Heart App" as bangleheart
+    component "hrdynamics App" as hrdapp
+  }
+}
+
+package "Android Phone" {
+  component Gadgetbridge as gb
+  package "Syncthing App" {
+    component "Path Sync" as phonesync
+  }
+  package "Android Storage" {
+    database "Gadgetbridge.db" as db
+  }
+}
+
+package "Laptop" {
+  package "Syncthing" {
+    component "Path Sync" as laptopsync
+  }
+  package "Storage" {
+    component "[path/to]/BangleBeat/data/" as datadir
+  }
+  package "BangleBeat" {
+    component "Jupyter Notebook" as notebook
+  }
+  package "Espruino Web IDE"{
+    component "Bangle Storage Interface" as idefiles
+    component "JavaScript with Bangle calls" as js_app
+  }
+}
+
+polar -- gb : Connects to >
+garmin -- gb : Connects to >
+bangle -- gb : Connects to >
+
+gb - db : Writes to >
+
+phonesync - db : Reads from >
+phonesync -- laptopsync : Syncs with
+laptopsync - datadir: Writes DB to >
+
+bangleheart -- idefiles : Reads CSV from >
+idefiles - datadir: Writes CSV to >
+
+notebook --- datadir : Reads From >
+notebook -- js_app : Generates Model(s) for >
+
+js_app -[#green,dashed,thickness=4]-> hrdapp : Deploys Model to
+
+@enduml

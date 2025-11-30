@@ -14,6 +14,7 @@
         pythonEnv = python.withPackages (ps: with ps; [
           ipykernel
           jupyter
+          keras
           matplotlib
           notebook
           numpy

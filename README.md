@@ -10,6 +10,8 @@ This approach hinges on historic heart patterns accurately predicting future hea
 
 **Disclaimer:** This project is a learning exercise in embedded AI/ML and does not claim to be cutting edge heart rate measurement research. This work is in no way intented or implied to be appropriate for medical use.
 
+!["Component Diagram"](assets/comoponent-diagram.svg)
+
 
 ## Prerequisites
 

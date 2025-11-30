@@ -1,0 +1,2 @@
+assets/component-diagram. filter=lfs diff=lfs merge=lfs -text
+assets/component-diagram.svg filter=lfs diff=lfs merge=lfs -text

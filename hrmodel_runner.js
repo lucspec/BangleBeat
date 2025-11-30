@@ -1,10 +1,40 @@
-// DON'T USE THIS CODE ON ITS OWN :) 
-// IT'S MEANT TO BE PASTED UNDER MODEL COEFFICIENTS BY THE NOTEBOOK
+// HR Model App for Bangle.js
+// Shows raw vs corrected HR with data logging
+//============================================================================
+
+// Import model data
+const modelData = require('hr_model_10feat_2.1mae.js'); // <-- Change this to your model file
+
+//============================================================================
+// HR MODEL RUNNER CLASS
+//============================================================================
+
+class HRModelRunner {
+  constructor(modelData) {
+    this.coefficients = modelData.coefficients;
+    this.intercept = modelData.intercept;
+    this.scalerMean = modelData.scalerMean;
+    this.scalerScale = modelData.scalerScale;
+    this.features = modelData.features;
+    this.bufferSize = modelData.bufferSize;
+    this.metadata = modelData.metadata || {};
+    this.hrBuffer = [];
+    
+    if (!this.coefficients || !this.features || this.coefficients.length !== this.features.length) {
+      throw new Error("Invalid model data");
+    }
+  }
+  
   addReading(hr) {
+    if (hr <= 0 || hr > 220) return;
     this.hrBuffer.push(hr);
     if (this.hrBuffer.length > this.bufferSize) {
       this.hrBuffer.shift();
     }
+  }
+  
+  isReady() {
+    return this.hrBuffer.length >= this.bufferSize;
   }
   
   computeFeatures() {
@@ -14,25 +44,28 @@
     const n = this.hrBuffer.length;
     
     for (let feature of this.features) {
+      let value = null;
+      
       if (feature.startsWith('hr_lag_')) {
         const lag = parseInt(feature.split('_')[2]);
-        features.push(this.hrBuffer[n - lag - 1]);
+        value = this.hrBuffer[n - lag - 1];
       }
       else if (feature.startsWith('hr_change_')) {
         const lag = parseInt(feature.split('_')[2]);
-        features.push(this.hrBuffer[n - 1] - this.hrBuffer[n - lag - 1]);
+        value = this.hrBuffer[n - 1] - this.hrBuffer[n - lag - 1];
       }
       else if (feature.startsWith('hr_accel_')) {
+        const lag = parseInt(feature.split('_')[2]);
         const change1 = this.hrBuffer[n - 1] - this.hrBuffer[n - 2];
-        const change2 = this.hrBuffer[n - 2] - this.hrBuffer[n - 3];
-        features.push(change1 - change2);
+        const change2 = this.hrBuffer[n - lag - 1] - this.hrBuffer[n - lag - 2];
+        value = change1 - change2;
       }
       else if (feature.startsWith('hr_rolling_mean_')) {
         const window = parseInt(feature.split('_')[3]);
         const start = n - window;
         let sum = 0;
         for (let j = start; j < n; j++) sum += this.hrBuffer[j];
-        features.push(sum / window);
+        value = sum / window;
       }
       else if (feature.startsWith('hr_rolling_std_')) {
         const window = parseInt(feature.split('_')[3]);
@@ -44,7 +77,7 @@
         for (let j = start; j < n; j++) {
           variance += Math.pow(this.hrBuffer[j] - mean, 2);
         }
-        features.push(Math.sqrt(variance / window));
+        value = Math.sqrt(variance / window);
       }
       else if (feature.startsWith('hr_rolling_min_')) {
         const window = parseInt(feature.split('_')[3]);
@@ -53,7 +86,7 @@
         for (let j = start + 1; j < n; j++) {
           if (this.hrBuffer[j] < min) min = this.hrBuffer[j];
         }
-        features.push(min);
+        value = min;
       }
       else if (feature.startsWith('hr_rolling_max_')) {
         const window = parseInt(feature.split('_')[3]);
@@ -62,8 +95,13 @@
         for (let j = start + 1; j < n; j++) {
           if (this.hrBuffer[j] > max) max = this.hrBuffer[j];
         }
-        features.push(max);
+        value = max;
       }
+      else {
+        value = 0;
+      }
+      
+      features.push(value);
     }
     
     return features;
@@ -95,17 +133,26 @@
     const predicted = this.predict();
     return predicted !== null ? predicted : rawHR;
   }
+  
+  getModelInfo() {
+    return {
+      features: this.features.length,
+      bufferSize: this.bufferSize,
+      mae: this.metadata.mae_bpm || "unknown",
+      bufferFill: this.hrBuffer.length,
+      isReady: this.isReady()
+    };
+  }
 }
 
-// ============================================================================
+//============================================================================
 // APP CODE
-// ============================================================================
+//============================================================================
 
-// Initialize
-const hrModel = new HRDynamicsModel();
+// Initialize model
+const hrModel = new HRModelRunner(modelData);
 let rawHR = 0;
 let correctedHR = 0;
-let confidence = 0;
 let isLogging = false;
 let logData = [];
 let logStartTime = null;
@@ -119,7 +166,7 @@ const COLORS = {
   raw: "#888",
   corrected: "#0f0",
   text: "#888",
-  label: "#888",  // Light gray for labels
+  label: "#888",
   button: "#444",
   buttonText: "#888",
   logOn: "#0f0",
@@ -139,9 +186,14 @@ function drawWelcome() {
   g.setFont("6x8", 2);
   g.drawString("Model Ready!", 10, 80);
   
+  const modelInfo = hrModel.getModelInfo();
+  g.setFont("6x8", 1.5);
+  g.drawString("MAE: " + modelInfo.mae + " bpm", 10, 110);
+  g.drawString("Features: " + modelInfo.features, 10, 130);
+  
   g.setFont("6x8", 2);
-  g.drawString("Tap to enter", 10, 130);
-  g.drawString("Button = Log", 10, 150);
+  g.drawString("Tap to enter", 10, 160);
+  g.drawString("Button = Log", 10, 180);
   
   g.flip();
 }
@@ -150,31 +202,31 @@ function drawWelcome() {
 function drawUI() {
   g.clear();
   
-  const GAP = 30;  // Gap between lines
+  const GAP = 30;
   const bigtext = 3;
   const liltext = 2;
   let y = 10;
   
-  
-  // BIG TEXT //////////////////////////////////////////////////////////////////
+  // BIG TEXT
   g.setFont("6x8", bigtext);
   
   // Corrected HR
   g.setColor(COLORS.corrected);
-  g.drawString(`MLc ${correctedHR > 0 ? correctedHR : "--"}`, 10, y);
+  g.drawString("MLc " + (correctedHR > 0 ? correctedHR : "--"), 10, y);
   y += GAP;
   
   // Raw HR
   g.setColor(COLORS.raw);
-  g.drawString(`Raw ${rawHR > 0 ? rawHR : "--"}`, 10, y);
+  g.drawString("Raw " + (rawHR > 0 ? rawHR : "--"), 10, y);
   y += 1.5*GAP;
   
-  // lil text //////////////////////////////////////////////////////////////////
+  // lil text
   g.setFont("6x8", liltext);
   
   // Buffer
+  const modelInfo = hrModel.getModelInfo();
   g.setColor(COLORS.raw);
-  g.drawString("Buffer " + hrModel.hrBuffer.length + "/" + hrModel.bufferSize, 10, y);
+  g.drawString("Buffer " + modelInfo.bufferFill + "/" + modelInfo.bufferSize, 10, y);
   y += GAP;
   
   // Sample count
@@ -198,100 +250,75 @@ function toggleLogging() {
     logData = [];
     logStartTime = Date.now();
     console.log("Logging started");
-    
-    // Quick feedback
-    Bangle.buzz(50);
   } else {
-    console.log(`Logging stopped - ${logData.length} samples`);
-    
-    // Save automatically on stop
-    if (logData.length > 0) {
-      saveLog();
-    }
-    
-    // Two buzzes for stop
-    Bangle.buzz(50);
-    setTimeout(() => Bangle.buzz(50), 150);
+    console.log("Logging stopped. Saving...");
+    saveLog();
   }
   
   drawUI();
 }
 
-// Save log to file
+// Save log to storage
 function saveLog() {
   if (logData.length === 0) {
+    console.log("No data to save");
     return;
   }
   
-  // Format as CSV
-  let csv = "timestamp,raw_hr,confidence,mlc_hr\n";
-  for (let entry of logData) {
-    csv += `${entry.timestamp},${entry.raw},${entry.confidence},${entry.correction}\n`;
-  }
+  const logContent = logData.map(d => 
+    d.time + "," + d.raw + "," + d.corrected + "," + d.diff
+  ).join("\n");
   
-  // Write to storage with timestamp
-  const filename = `hrmodel_${Date.now()}.csv`;
-  require("Storage").write(filename, csv);
+  const header = "timestamp,raw_hr,corrected_hr,difference\n";
+  require("Storage").write(LOG_FILE, header + logContent);
   
-  console.log(`Saved ${logData.length} samples to ${filename}`);
+  console.log("Saved " + logData.length + " samples to " + LOG_FILE);
 }
 
-// Handle physical button press
-Bangle.on('lcdPower', function(on) {
-  if (on && !showingWelcome) {
-    // Button pressed while screen is on - toggle logging
-    toggleLogging();
-  }
-});
-
-// Alternative: use setWatch for button
-setWatch(function() {
-  if (!showingWelcome) {
-    toggleLogging();
-  }
-}, BTN1, {repeat: true, edge: "falling"});
-
-// Handle touch events
-Bangle.on('touch', function(button, xy) {
-  if (showingWelcome) {
-    // Any tap dismisses welcome
-    showingWelcome = false;
-    drawUI();
-    return;
-  }
-});
-
-// Handle HRM data
-Bangle.on('HRM', function(hrm) {
-  // Don't process while showing welcome
-  if (showingWelcome) return;
-
+// HR monitor callback
+function onHRM(hrm) {
   rawHR = hrm.bpm;
-  confidence = hrm.confidence;
+  
   if (rawHR > 0) {
     correctedHR = hrModel.getCorrectedHR(rawHR);
-    if (isLogging) {
+    
+    if (isLogging && correctedHR > 0) {
+      const diff = correctedHR - rawHR;
       logData.push({
-        timestamp: Math.round(Date.now()),
+        time: Date.now() - logStartTime,
         raw: rawHR,
         corrected: correctedHR,
-        confidence: confidence
+        diff: diff
       });
     }
   }
+  
+  if (!showingWelcome) {
+    drawUI();
+  }
+}
 
-  drawUI();
+// Button handler
+setWatch(toggleLogging, BTN1, {repeat: true, edge: "rising"});
+
+// Touch handler
+Bangle.on('touch', function() {
+  if (showingWelcome) {
+    showingWelcome = false;
+    drawUI();
+  }
 });
 
-// Initial setup
-g.clear();
-Bangle.setHRMPower(1); // Turn on heart rate monitor
-Bangle.setLCDPower(1); // Keep screen on
+// Start HR monitoring
+Bangle.setHRMPower(1);
+Bangle.on('HRM', onHRM);
 
 // Show welcome screen
 drawWelcome();
 
-// Cleanup on exit
-E.on('kill', function() {
-  Bangle.setHRMPower(0);
-});
+// Model info
+const modelInfo = hrModel.getModelInfo();
+console.log("HR Model loaded:");
+console.log("  MAE: " + modelInfo.mae + " bpm");
+console.log("  Features: " + modelInfo.features);
+console.log("  Buffer: " + modelInfo.bufferSize + " readings");
