@@ -5,7 +5,6 @@ FROM nixos/nix:latest
 # We append to the existing configuration file
 RUN echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
 
-COPY . /src
 WORKDIR /src
 
 # By default, drop into the nix development shell

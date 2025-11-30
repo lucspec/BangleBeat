@@ -12,7 +12,7 @@
   {
     "hr_min": 60,
     "hr_max": 65,
-    "correction": 7.29
+    "correction": 7.38
   },
   {
     "hr_min": 65,
@@ -22,42 +22,42 @@
   {
     "hr_min": 70,
     "hr_max": 75,
-    "correction": 4.83
+    "correction": 4.48
   },
   {
     "hr_min": 75,
     "hr_max": 80,
-    "correction": 0.72
+    "correction": 0.5
   },
   {
     "hr_min": 80,
     "hr_max": 85,
-    "correction": -0.94
+    "correction": -1.5
   },
   {
     "hr_min": 85,
     "hr_max": 90,
-    "correction": -7.27
+    "correction": -7.52
   },
   {
     "hr_min": 90,
     "hr_max": 95,
-    "correction": -14.29
+    "correction": -14.31
   },
   {
     "hr_min": 95,
     "hr_max": 100,
-    "correction": -18.49
+    "correction": -18.43
   },
   {
     "hr_min": 100,
     "hr_max": 105,
-    "correction": -20.84
+    "correction": -21.14
   },
   {
     "hr_min": 105,
     "hr_max": 110,
-    "correction": -20.47
+    "correction": -21.21
   },
   {
     "hr_min": 110,
@@ -107,7 +107,7 @@
   {
     "hr_min": 160,
     "hr_max": 165,
-    "correction": -100.0
+    "correction": -99.45
   },
   {
     "hr_min": 175,
