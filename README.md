@@ -15,9 +15,9 @@ This approach hinges on historic heart patterns accurately predicting future hea
 
 - [Bangle JS 2](https://shop.espruino.com/banglejs2)
  
-- A reference heart rate measuring device [supported by Gadgetbridge](https://gadgetbridge.org/gadgets/); 
+- At least one reference heart rate measuring device (I chose a Polar H10 chest strap and a Garmin Instinct 2X watch). Just make sure it is [supported by Gadgetbridge](https://gadgetbridge.org/gadgets/)! 
 
-- An android phone
+- An android phone (to run gadgetbridge)
 
 
 ## Getting Started
@@ -37,6 +37,7 @@ This approach hinges on historic heart patterns accurately predicting future hea
 <details><summary> nix (unix-like only)</summary>
 
 ```bash
+# (In this cloned repo, of course)
 # builds the development environment, enters a shell with all required libraries and tools
 nix develop 
 ```
@@ -91,7 +92,7 @@ I plan to take continue this work in a few ways.
 
 Short term: port data loading and ML training from `main.ipynb` into [the web interface for my experimental deployment app](https://github.com/lucspec/BangleApps/tree/master/apps/hrdynamics/interface.html)
 
-Medium term: merge my model deployment app [hrdynamics](https://github.com/lucspec/BangleApps/tree/master/apps/hrdynamics) into upstream so others can use this approach to train + deploy their own models.
+Medium term: merge my model deployment app ([hrdynamics](https://github.com/lucspec/BangleApps/tree/master/apps/hrdynamics)) into upstream so others can use this approach to train + deploy their own models.
 
 Long term: merge this functionality with [Gadgetbridge](https://codeberg.org/Freeyourgadget/Gadgetbridge) for continuous on-device, always private, personal model training. Time will tell if this aligns well enough with Gadgetbridge's goals to merge into upstream or if I will need to maintain it as a fork.
 
