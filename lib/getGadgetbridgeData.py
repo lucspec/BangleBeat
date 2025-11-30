@@ -22,7 +22,7 @@ except ImportError as e:
     print("Run: poetry install --with analysis")
     sys.exit(1)
 
-def getGadgetbridge(db_path: str, 
+def getGadgetbridgeData(db_path: str, 
                     devices: Optional[List[str]] = None,
                     device_ids: Optional[dict] = None,
                     start_date: Optional[str] = None,
