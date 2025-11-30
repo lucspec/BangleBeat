@@ -3,3 +3,4 @@
 # Gadgetbridge DBs 
 **.db
 **/Gadgetbridge
+.vscode/settings.json
