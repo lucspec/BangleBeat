@@ -4,3 +4,4 @@
 **.db
 **/Gadgetbridge
 .vscode/settings.json
+.envrc
