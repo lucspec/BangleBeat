@@ -1,0 +1,5 @@
+.venv/
+
+# Gadgetbridge DBs 
+**.db
+**/Gadgetbridge
