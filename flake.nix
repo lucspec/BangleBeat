@@ -12,20 +12,26 @@
         pkgs = nixpkgs.legacyPackages.${system};
         python = pkgs.python312;
         pythonEnv = python.withPackages (ps: with ps; [
-          pandas
+          ipykernel
+          jupyter
           matplotlib
+          notebook
           numpy
+          pandas
+          pip
+          scipy
+          seaborn
         ]);
 
-        baseBuildInputs = [ pythonEnv ];
+        baseBuildInputs = [ 
+          pythonEnv
+        ];
 
         commonShellHook =  ''
             echo "Python environment with pandas and matplotlib loaded"
             echo "Python version: $(python --version)"
             echo "Available packages:"
-            echo "  - pandas"
-            echo "  - matplotlib"
-            echo "  - numpy"
+            pip list
           '';
       in
       {
