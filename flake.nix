@@ -21,6 +21,9 @@
           pip
           scipy
           seaborn
+          scikit-learn
+          skl2onnx
+          tensorflow
         ]);
 
         baseBuildInputs = [ 

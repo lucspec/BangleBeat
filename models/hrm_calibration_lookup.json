@@ -1,0 +1,117 @@
+[
+  {
+    "hr_min": 50,
+    "hr_max": 55,
+    "correction": 30.66
+  },
+  {
+    "hr_min": 55,
+    "hr_max": 60,
+    "correction": 11.73
+  },
+  {
+    "hr_min": 60,
+    "hr_max": 65,
+    "correction": 7.29
+  },
+  {
+    "hr_min": 65,
+    "hr_max": 70,
+    "correction": 6.16
+  },
+  {
+    "hr_min": 70,
+    "hr_max": 75,
+    "correction": 4.83
+  },
+  {
+    "hr_min": 75,
+    "hr_max": 80,
+    "correction": 0.72
+  },
+  {
+    "hr_min": 80,
+    "hr_max": 85,
+    "correction": -0.94
+  },
+  {
+    "hr_min": 85,
+    "hr_max": 90,
+    "correction": -7.27
+  },
+  {
+    "hr_min": 90,
+    "hr_max": 95,
+    "correction": -14.29
+  },
+  {
+    "hr_min": 95,
+    "hr_max": 100,
+    "correction": -18.49
+  },
+  {
+    "hr_min": 100,
+    "hr_max": 105,
+    "correction": -20.84
+  },
+  {
+    "hr_min": 105,
+    "hr_max": 110,
+    "correction": -20.47
+  },
+  {
+    "hr_min": 110,
+    "hr_max": 115,
+    "correction": -19.5
+  },
+  {
+    "hr_min": 115,
+    "hr_max": 120,
+    "correction": -14.61
+  },
+  {
+    "hr_min": 120,
+    "hr_max": 125,
+    "correction": -18.97
+  },
+  {
+    "hr_min": 125,
+    "hr_max": 130,
+    "correction": -23.5
+  },
+  {
+    "hr_min": 130,
+    "hr_max": 135,
+    "correction": -13.5
+  },
+  {
+    "hr_min": 140,
+    "hr_max": 145,
+    "correction": -13.47
+  },
+  {
+    "hr_min": 145,
+    "hr_max": 150,
+    "correction": -68.67
+  },
+  {
+    "hr_min": 150,
+    "hr_max": 155,
+    "correction": -75.0
+  },
+  {
+    "hr_min": 155,
+    "hr_max": 160,
+    "correction": -83.0
+  },
+  {
+    "hr_min": 160,
+    "hr_max": 165,
+    "correction": -100.0
+  },
+  {
+    "hr_min": 175,
+    "hr_max": 180,
+    "correction": -120.0
+  }
+]
