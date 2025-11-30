@@ -8,8 +8,8 @@
 **.pyc
 **__pycache__**
 
-data/
-models/
+data/**
+models/**
 .envrc
 
 **.pyc
