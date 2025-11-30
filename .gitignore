@@ -4,12 +4,9 @@
 **.db
 **/Gadgetbridge
 .vscode/settings.json
-<<<<<<< HEAD
-.envrc
 
 **.pyc
 **__pycache__**
 
 ./data/**
-=======
->>>>>>> 28701d8 (ignore vscode settings)
+.envrc
