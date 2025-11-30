@@ -2,7 +2,7 @@
   description = "Python development environment with pandas and matplotlib";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/117cc7f94e8072499b0a7aa4c52084fa4e11cc9b.tar.gz";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
