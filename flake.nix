@@ -17,6 +17,7 @@
           matplotlib
           notebook
           numpy
+          onnx
           pandas
           pip
           scipy
