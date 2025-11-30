@@ -73,7 +73,7 @@ docker run --rm -ti -v .:/src localhost/banglebeat
 
 Things to know:
 
-1. Heart rate sensing is an *expensive* process for a little embedded computer. I was anecdotally able to log data with my BangleJS for ~24h but your mileage may vary.
+1. Heart rate sensing is an *expensive* process for a little embedded computer. I was anecdotally able to log data with my BangleJS for ~24h but your mileage may vary. More samples means more power consumption.
 
 2. Choose a great reference device for you. ECG chest straps will give you very accurate data, but might not be comfortable to wear for long periods of time. Wrist measurement devices can be very good, but it can be a biomechanically challenging place to measure heart rate data from. Rings, in-ear headphones, and other devices may do the job too. Garbage in equals Garbage out, so be careful about the data you choose.
 
