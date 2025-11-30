@@ -15,7 +15,7 @@ This approach hinges on historic heart patterns accurately predicting future hea
 
 - [Bangle JS 2](https://shop.espruino.com/banglejs2)
  
-- A reference device [supported by Gadgetbridge](https://gadgetbridge.org/gadgets/); 
+- A reference heart rate measuring device [supported by Gadgetbridge](https://gadgetbridge.org/gadgets/); 
 
 - An android phone
 
